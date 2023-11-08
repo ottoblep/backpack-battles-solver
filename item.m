@@ -3,7 +3,7 @@ classdef item
         position int32
         % 1x2 integer array = coordinates 
         rotation int32
-        % 0=right 1=down 2=left 3=up
+        % 1=90degrees 2=180degrees etc
         blocks int32
         % 2xN array of coordinates relative to origin
         connections_blocks int32

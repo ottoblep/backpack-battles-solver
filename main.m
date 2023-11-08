@@ -19,7 +19,7 @@ blocklist(findMaxConnections(blocklist)).rotation = 0;
 
 % Place second block next to it
 blocklist(2).position = [0 1];
-blocklist(2).rotation = [1];
+blocklist(2).rotation = [2];
 
 disp(checkBuildValidity(blocklist));
 
@@ -40,7 +40,7 @@ function isValid = checkBuildValidity(blocklist)
     placed_blocks = [];
     for i = 1:length(blocklist)
         for k = 1:size(blocklist(i).blocks,1)
-            new_block = rotateBlock(blocklist(i).position + blocklist(i).blocks(k,:), blocklist(i).rotation);
+            new_block = blocklist(i).position + rotateBlock(blocklist(i).blocks(k,:), blocklist(i).rotation);
             if checkIfInCoordArray(new_block, placed_blocks)
                 isValid = false;
                 return
@@ -62,8 +62,8 @@ function isInArray = checkIfInCoordArray(new_coords, existing_coords)
 end
 
 function new_coords = rotateBlock(position, rotation)
-    % 1=90degrees 2=180degrees etc
-    rad = rotation*pi/2;
+    % 1=90degrees right 2=180degrees right etc
+    rad = (-1)*double(rotation)*pi/2;
     rotation_matrix = [cos(rad) -sin(rad); sin(rad) cos(rad)];
-    new_coords = rotation_matrix * position;
+    new_coords = transpose(int32(rotation_matrix * transpose(double(position))));
 end
