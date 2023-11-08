@@ -71,16 +71,13 @@ end
 
 function drawBag(blocklist)
 % Produce a plot of all items
-    placed_blocks = accumulateBlocks(blocklist);
-    scatter(placed_blocks(:,1),placed_blocks(:,2));
-end
-
-function placed_blocks = accumulateBlocks(blocklist)
-    placed_blocks = [];
+    hold on;
     for i = 1:length(blocklist)
+        placed_blocks = [];
         for k = 1:size(blocklist(i).blocks,1)
             new_block = blocklist(i).position + rotateBlock(blocklist(i).blocks(k,:), blocklist(i).rotation);
             placed_blocks = [placed_blocks; new_block];
         end
+        scatter(placed_blocks(:,1),placed_blocks(:,2));
     end
 end
