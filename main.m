@@ -1,25 +1,24 @@
 simple_block = item();
 simple_block.blocks = [0 0];
-simple_block.connections_blocks = [0 0];
-simple_block.connections_directions = [0];
 
 double_block = item();
 double_block.blocks = [0 0; 0 1];
-double_block.connections_blocks = [0 0];
-double_block.connections_directions = [0];
+
+corner_block = item();
+corner_block.blocks = [0 0; 0 1; 1 1];
 
 
-blocklist = [simple_block double_block];
+blocklist = [simple_block double_block corner_block];
 
 % Constructive placement
 
-% Place item with most connections in the middle
-blocklist(findMaxConnections(blocklist)).position = [0 0];
-blocklist(findMaxConnections(blocklist)).rotation = 0;
-
-% Place second block next to it
+% Test placement
+blocklist(1).position = [0 0];
+blocklist(1).rotation = 0;
 blocklist(2).position = [0 1];
-blocklist(2).rotation = [1];
+blocklist(2).rotation = 1;
+blocklist(3).position = [-1 0];
+blocklist(3).rotation = 2;
 
 disp(checkBuildValidity(blocklist));
 drawBag(blocklist);
