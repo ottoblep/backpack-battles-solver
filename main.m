@@ -19,9 +19,10 @@ blocklist(findMaxConnections(blocklist)).rotation = 0;
 
 % Place second block next to it
 blocklist(2).position = [0 1];
-blocklist(2).rotation = [2];
+blocklist(2).rotation = [1];
 
 disp(checkBuildValidity(blocklist));
+drawBag(blocklist);
 
 function mostConnsIndex = findMaxConnections(blocklist)
     maxConns = 0;
@@ -66,4 +67,20 @@ function new_coords = rotateBlock(position, rotation)
     rad = (-1)*double(rotation)*pi/2;
     rotation_matrix = [cos(rad) -sin(rad); sin(rad) cos(rad)];
     new_coords = transpose(int32(rotation_matrix * transpose(double(position))));
+end
+
+function drawBag(blocklist)
+% Produce a plot of all items
+    placed_blocks = accumulateBlocks(blocklist);
+    scatter(placed_blocks(:,1),placed_blocks(:,2));
+end
+
+function placed_blocks = accumulateBlocks(blocklist)
+    placed_blocks = [];
+    for i = 1:length(blocklist)
+        for k = 1:size(blocklist(i).blocks,1)
+            new_block = blocklist(i).position + rotateBlock(blocklist(i).blocks(k,:), blocklist(i).rotation);
+            placed_blocks = [placed_blocks; new_block];
+        end
+    end
 end
