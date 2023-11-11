@@ -1,3 +1,4 @@
+% Define Blocks
 simple_block = item();
 simple_block.blocks = [0 0];
 simple_block.connection_blocks = [];
@@ -18,21 +19,33 @@ corner_block.connection_modifier = 3;
 
 blocklist = [simple_block double_block corner_block];
 
-% Constructive placement
+% Manual placement
+% blocklist(1).position = [0 0];
+% blocklist(1).rotation = 0;
+% blocklist(2).position = [0 1];
+% blocklist(2).rotation = 0;
+% blocklist(3).position = [-1 0];
+% blocklist(3).rotation = 3;
 
-% Test placement
-blocklist(1).position = [0 0];
-blocklist(1).rotation = 0;
-blocklist(2).position = [0 1];
-blocklist(2).rotation = 0;
-blocklist(3).position = [-1 0];
-blocklist(3).rotation = 3;
+% Random placement with minimum score
+rng(0,'twister');
+while 1
+    for item_idx = 1:length(blocklist)
+        blocklist(item_idx).position = randi([-3 3],1,2);
+        blocklist(item_idx).rotation = randi([0 4],1,1);
+    end
 
+    if checkBuildValidity(blocklist) && objectiveFunction(blocklist)>=8; break; end
+end
+
+% Visualize
 disp("Validity:");
 disp(checkBuildValidity(blocklist));
-drawBag(blocklist);
 disp("Configuration Value:");
 disp(objectiveFunction(blocklist));
+drawBag(blocklist);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function value = objectiveFunction(blocklist)
     value = 0;
