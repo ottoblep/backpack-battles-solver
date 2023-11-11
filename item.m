@@ -1,3 +1,4 @@
+% Defines the properties of an item consisting of blocks
 classdef item
     properties 
         position int32
@@ -6,10 +7,8 @@ classdef item
         % 1=90degrees 2=180degrees etc
         blocks int32
         % 2xN array of coordinates relative to origin
-        connections_blocks int32
-        % 2xN array of coordinates relative to origin
-        connections_directions int32
-        % 1xN array of rotations for each connections block
+        connection_blocks int32
+        % 2xN array of coordinates affected by the block 
         value double
         % Value of the block for the objective function
         connection_modifier double
