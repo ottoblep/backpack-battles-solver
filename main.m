@@ -17,31 +17,46 @@ corner_block.connection_blocks = [0 -1; 2 1];
 corner_block.value = 1;
 corner_block.connection_modifier = 3;
 
-blocklist = [simple_block double_block corner_block];
+square_block = item();
+square_block.blocks = [0 0; 0 1; 1 1; 1 0];
+square_block.connection_blocks = [0 -1; 1 -1];
+square_block.value = 1;
+square_block.connection_modifier = 3;
 
-% Manual placement
-% blocklist(1).position = [0 0];
-% blocklist(1).rotation = 0;
-% blocklist(2).position = [0 1];
-% blocklist(2).rotation = 0;
-% blocklist(3).position = [-1 0];
-% blocklist(3).rotation = 3;
+blocklist = [simple_block double_block corner_block square_block];
 
-% Random placement with minimum score
+% Random placement with abort criterium 
 rng(0,'twister');
+abortCounter = 0;
+abortScore = 0;
+best_configuration = [];
 while 1
     for item_idx = 1:length(blocklist)
         blocklist(item_idx).position = randi([-3 3],1,2);
-        blocklist(item_idx).rotation = randi([0 4],1,1);
+        blocklist(item_idx).rotation = randi([0 3],1,1);
     end
 
-    if checkBuildValidity(blocklist) && objectiveFunction(blocklist)>=8; break; end
+    if ~checkBuildValidity(blocklist) continue; end
+
+    score = objectiveFunction(blocklist);
+    if score > abortScore
+        abortScore = score;
+        abortCounter = 0;
+        best_configuration = blocklist;
+        disp("Current Best Score:");
+        disp(score);
+    else
+        abortCounter = abortCounter + 1;
+    end
+
+    if abortCounter > 1e4; break; end
 end
+blocklist = best_configuration;
 
 % Visualize
 disp("Validity:");
 disp(checkBuildValidity(blocklist));
-disp("Configuration Value:");
+disp("Configuration Score:");
 disp(objectiveFunction(blocklist));
 drawBag(blocklist);
 
