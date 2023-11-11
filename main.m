@@ -1,12 +1,23 @@
 simple_block = item();
 simple_block.blocks = [0 0];
+simple_block.connections_blocks = [];
+simple_block.connections_directions = [];
+simple_block.value = 1;
+simple_block.connection_modifier = 1;
 
 double_block = item();
 double_block.blocks = [0 0; 0 1];
+double_block.connections_blocks = [0 0; 0 1];
+double_block.connections_directions = [3 1];
+double_block.value = 1;
+double_block.connection_modifier = 2;
 
 corner_block = item();
 corner_block.blocks = [0 0; 0 1; 1 1];
-
+corner_block.connections_blocks = [0 0; 1 1];
+corner_block.connections_directions = [1 0];
+double_block.value = 1;
+double_block.connection_modifier = 3;
 
 blocklist = [simple_block double_block corner_block];
 
