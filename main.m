@@ -1,43 +1,43 @@
-% Import block definitions
-types = block_types();
-blocklist = [types.simple_block types.double_block types.corner_block types.square_block];
-
-% Random placement with abort criterium 
-rng(0,'twister');
-abortCounter = 0;
-abortScore = 0;
-best_configuration = [];
-while 1
-    for item_idx = 1:length(blocklist)
-        blocklist(item_idx).position = randi([-3 3],1,2);
-        blocklist(item_idx).rotation = randi([0 3],1,1);
+function main()
+    % Import block definitions
+    types = block_types();
+    blocklist = [types.simple_block types.double_block types.corner_block types.square_block];
+    
+    % Random placement with abort criterium 
+    rng(0,'twister');
+    abortCounter = 0;
+    abortScore = 0;
+    best_configuration = [];
+    while 1
+        for item_idx = 1:length(blocklist)
+            blocklist(item_idx).position = randi([-3 3],1,2);
+            blocklist(item_idx).rotation = randi([0 3],1,1);
+        end
+    
+        if ~checkBuildValidity(blocklist) continue; end
+        
+        score = objectiveFunction(blocklist);
+        if score > abortScore
+            abortScore = score;
+            abortCounter = 0;
+            best_configuration = blocklist;
+            disp("Current Best Score:");
+            disp(score);
+        else
+            abortCounter = abortCounter + 1;
+        end
+    
+        if abortCounter > 1e4; break; end
     end
-
-    if ~checkBuildValidity(blocklist) continue; end
-
-    score = objectiveFunction(blocklist);
-    if score > abortScore
-        abortScore = score;
-        abortCounter = 0;
-        best_configuration = blocklist;
-        disp("Current Best Score:");
-        disp(score);
-    else
-        abortCounter = abortCounter + 1;
-    end
-
-    if abortCounter > 1e4; break; end
+    blocklist = best_configuration;
+    
+    % Visualize
+    disp("Validity:");
+    disp(checkBuildValidity(blocklist));
+    disp("Configuration Score:");
+    disp(objectiveFunction(blocklist));
+    drawBag(blocklist);
 end
-blocklist = best_configuration;
-
-% Visualize
-disp("Validity:");
-disp(checkBuildValidity(blocklist));
-disp("Configuration Score:");
-disp(objectiveFunction(blocklist));
-drawBag(blocklist);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function value = objectiveFunction(blocklist)
     value = 0;
