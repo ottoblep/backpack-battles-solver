@@ -1,29 +1,6 @@
-% Define Blocks
-simple_block = item();
-simple_block.blocks = [0 0];
-simple_block.connection_blocks = [];
-simple_block.value = 1;
-simple_block.connection_modifier = 1;
-
-double_block = item();
-double_block.blocks = [0 0; 0 1];
-double_block.connection_blocks = [0 -1; 0 2];
-double_block.value = 1;
-double_block.connection_modifier = 2;
-
-corner_block = item();
-corner_block.blocks = [0 0; 0 1; 1 1];
-corner_block.connection_blocks = [0 -1; 2 1];
-corner_block.value = 1;
-corner_block.connection_modifier = 3;
-
-square_block = item();
-square_block.blocks = [0 0; 0 1; 1 1; 1 0];
-square_block.connection_blocks = [0 -1; 1 -1];
-square_block.value = 1;
-square_block.connection_modifier = 3;
-
-blocklist = [simple_block double_block corner_block square_block];
+% Import block definitions
+types = block_types();
+blocklist = [types.simple_block types.double_block types.corner_block types.square_block];
 
 % Random placement with abort criterium 
 rng(0,'twister');
