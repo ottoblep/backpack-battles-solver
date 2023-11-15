@@ -62,10 +62,10 @@ function adjacency_matrix = checkBlockConnections(blocklist)
             if i==j; continue; end
             % Check each possible connection location of j
             for connection_idx = 1:length(blocklist(j).connection_blocks) 
-                connection_block_position = blocklist(j).position + rotateBlock(blocklist(j).connection_blocks(connection_idx,:), blocklist(j).rotation);
+                connection_block_position = blocklist(j).position + rotateCoords(blocklist(j).connection_blocks(connection_idx,:), blocklist(j).rotation);
                 % Check for overlap with each block of item i
                 for k = 1:size(blocklist(i).blocks,1)
-                    if connection_block_position == blocklist(i).position + rotateBlock(blocklist(i).blocks(k,:), blocklist(i).rotation);
+                    if connection_block_position == blocklist(i).position + rotateCoords(blocklist(i).blocks(k,:), blocklist(i).rotation);
                         adjacency_matrix(i,j) = 1;
                         break;
                     end
@@ -80,7 +80,7 @@ function isValid = checkBuildValidity(blocklist)
     placed_blocks = [];
     for i = 1:length(blocklist)
         for k = 1:size(blocklist(i).blocks,1)
-            new_block = blocklist(i).position + rotateBlock(blocklist(i).blocks(k,:), blocklist(i).rotation);
+            new_block = blocklist(i).position + rotateCoords(blocklist(i).blocks(k,:), blocklist(i).rotation);
             if checkIfInCoordArray(new_block, placed_blocks)
                 isValid = false;
                 return
@@ -101,7 +101,7 @@ function isInArray = checkIfInCoordArray(new_coords, existing_coords)
     isInArray = false;
 end
 
-function new_coords = rotateBlock(position, rotation)
+function new_coords = rotateCoords(position, rotation)
     % 1=90degrees right 2=180degrees right etc
     rad = (-1)*double(rotation)*pi/2;
     rotation_matrix = [cos(rad) -sin(rad); sin(rad) cos(rad)];
@@ -114,7 +114,7 @@ function drawBag(blocklist)
     for i = 1:length(blocklist)
         placed_blocks = [];
         for k = 1:size(blocklist(i).blocks,1)
-            new_block = blocklist(i).position + rotateBlock(blocklist(i).blocks(k,:), blocklist(i).rotation);
+            new_block = blocklist(i).position + rotateCoords(blocklist(i).blocks(k,:), blocklist(i).rotation);
             placed_blocks = [placed_blocks; new_block];
         end
         scatter(placed_blocks(:,1),placed_blocks(:,2));
