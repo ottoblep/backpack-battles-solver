@@ -117,6 +117,9 @@ function drawBag(blocklist)
             new_block = blocklist(i).position + rotateCoords(blocklist(i).blocks(k,:), blocklist(i).rotation);
             placed_blocks = [placed_blocks; new_block];
         end
-        scatter(placed_blocks(:,1),placed_blocks(:,2));
+        scatter(placed_blocks(:,1),placed_blocks(:,2), 5000,'filled',"square");
+        xlim([-6 6]);
+        ylim([-6 6]);
+        axis equal;
     end
 end
