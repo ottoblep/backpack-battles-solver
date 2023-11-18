@@ -75,6 +75,8 @@ function adjacency_matrix = checkBlockConnections(blocklist)
     end
 end
 
+% Disjointness of n axis-parallel rectangles can be checked in O(n log n) time
+% This is certainly much worse.
 function isValid = checkBuildValidity(blocklist)
     % Check for overlap in item positions
     placed_blocks = [];
