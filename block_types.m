@@ -3,24 +3,16 @@ function types = block_types()
     types.simple_block = item();
     types.simple_block.blocks = [0 0];
     types.simple_block.connection_blocks = [];
-    types.simple_block.value = 1;
-    types.simple_block.connection_modifier = 1;
 
     types.double_block = item();
     types.double_block.blocks = [0 0; 0 1];
     types.double_block.connection_blocks = [0 -1; 0 2];
-    types.double_block.value = 1;
-    types.double_block.connection_modifier = 2;
 
     types.corner_block = item();
     types.corner_block.blocks = [0 0; 0 1; 1 1];
     types.corner_block.connection_blocks = [0 -1; 2 1];
-    types.corner_block.value = 1;
-    types.corner_block.connection_modifier = 3;
 
     types.square_block = item();
     types.square_block.blocks = [0 0; 0 1; 1 1; 1 0];
     types.square_block.connection_blocks = [0 -1; 1 -1];
-    types.square_block.value = 1;
-    types.square_block.connection_modifier = 3;
 end

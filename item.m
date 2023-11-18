@@ -6,12 +6,12 @@ classdef item
         rotation int32
         % 1=90degrees 2=180degrees etc
         blocks int32
-        % 2xN array of coordinates relative to origin
+        % 2xN array of relative coordinates relative to origin
         connection_blocks int32
-        % 2xN array of coordinates affected by the block 
-        value double
-        % Value of the block for the objective function
-        connection_modifier double
-        % Modifies the value of a block placed at the connection
+        % 2xN array of relative coordinates that can connect the block 
+        connection_type
+        % Type(s) of item that can connect the block
+        item_type
+        % Decides which other items can be modified by this item
     end
 end
