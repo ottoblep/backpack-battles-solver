@@ -1,5 +1,4 @@
-function types = block_types()
-    % Define Blocks
+function types = items()
     types.simple_block = item();
     types.simple_block.blocks = [0 0];
     types.simple_block.connection_blocks = [];

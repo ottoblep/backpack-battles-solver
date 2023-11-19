@@ -1,7 +1,9 @@
 function main()
     % Import block definitions
-    types = block_types();
-    blocklist = [types.simple_block types.double_block types.corner_block types.square_block];
+    item_types = items();
+    bag_types = bags();
+    blocklist = [item_types.simple_block item_types.double_block item_types.corner_block item_types.square_block];
+    baglist = [bag_types.basic_bag bag_types.basic_bag];
     
     % Random placement with abort criterium 
     rng(0,'twister');
