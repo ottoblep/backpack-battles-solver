@@ -15,10 +15,18 @@ function main()
             blocklist(item_idx).position = randi([0 6],1,2);
             blocklist(item_idx).rotation = randi([0 3],1,1);
         end
+        for bag_idx = 1:length(baglist)
+            baglist(bag_idx).position = randi([0 6],1,2);
+            baglist(bag_idx).rotation = randi([0 3],1,1);
+        end
 
-        placement_matrix = generatePlacementMatrix(blocklist);
+        placement_matrix = generatePlacementMatrix(blocklist, baglist);
 
-        if isempty(placement_matrix); continue; end;
+        % Check for invalid configuration
+        if isempty(placement_matrix);
+            abortCounter = abortCounter + 1;
+            continue;
+        end
 
         score = countValidConnections(blocklist, placement_matrix);
         if score > abortScore
@@ -27,8 +35,6 @@ function main()
             best_configuration = placement_matrix;
             disp("Current Best Score:");
             disp(score);
-        else
-            abortCounter = abortCounter + 1;
         end
     
         if abortCounter > 1e4; break; end
@@ -36,10 +42,30 @@ function main()
     heatmap(best_configuration);
 end
 
-function placement_matrix = generatePlacementMatrix(blocklist)
-    bag_size = 10;
-    placement_matrix = zeros(bag_size);
+function placement_matrix = generatePlacementMatrix(blocklist, baglist)
+    bag_size = 8;
+    placement_matrix = zeros(bag_size) - 1;
 
+    % Place Bags
+    for bag_idx = 1:length(baglist)
+        for block_idx = 1:size(baglist(bag_idx).blocks,1)
+
+            new_block = baglist(bag_idx).position + ...
+                rotateCoords(baglist(bag_idx).blocks(block_idx,:), baglist(bag_idx).rotation);
+
+            if (new_block(1) < 1 || new_block(2) < 1 || ...
+                new_block(1) > bag_size || new_block(2) > bag_size || ...
+                placement_matrix(new_block(1), new_block(2)) ~= -1)
+                % Invalid placement
+                placement_matrix = [];
+                return;
+            end
+
+            placement_matrix(new_block(1), new_block(2)) = 0;
+        end
+    end
+
+    % Place Items
     for item_idx = 1:length(blocklist)
         for block_idx = 1:size(blocklist(item_idx).blocks,1)
 
