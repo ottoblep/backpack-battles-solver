@@ -5,11 +5,19 @@ function main()
     blocklist = [item_types.simple_block item_types.double_block item_types.corner_block item_types.square_block];
     baglist = [bag_types.leather_bag bag_types.ranger_bag bag_types.potion_belt];
     
-    % Random placement with abort criterium 
+    best_configuration = randomPlacement(blocklist, baglist, 1e3);
+
+    assert(~isempty(best_configuration), "No valid configuration found.");
+    heatmap(transpose(best_configuration));
+end
+
+function best_configuration = randomPlacement(blocklist, baglist, maximum_tries)
     rng(0,'twister');
     abortCounter = 0;
     abortScore = 0;
     best_configuration = [];
+
+    tic;
     while 1
         for item_idx = 1:length(blocklist)
             blocklist(item_idx).position(1) = randi([0 8],1);
@@ -20,7 +28,6 @@ function main()
             baglist(bag_idx).position = randi([0 6],1,2);
             baglist(bag_idx).rotation = randi([0 3],1,1);
         end
-
         placement_matrix = generatePlacementMatrix(blocklist, baglist);
 
         % Check for invalid configuration
@@ -32,16 +39,17 @@ function main()
         score = countValidConnections(blocklist, placement_matrix);
         if score > abortScore
             abortScore = score;
-            abortCounter = 0;
             best_configuration = placement_matrix;
             disp("Current Best Score:");
             disp(score);
+            disp("Average time per evaluation:")
+            disp(toc/abortCounter);
+            abortCounter = 0;
+            tic;
         end
     
-        if abortCounter > 1e3; break; end
+        if abortCounter > maximum_tries; break; end
     end
-    assert(~isempty(best_configuration), "No valid configuration found.");
-    heatmap(transpose(best_configuration));
 end
 
 function placement_matrix = generatePlacementMatrix(blocklist, baglist)
