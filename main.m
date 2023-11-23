@@ -37,14 +37,14 @@ function main()
             disp(score);
         end
     
-        if abortCounter > 1e4; break; end
+        if abortCounter > 1e3; break; end
     end
-    heatmap(best_configuration);
+    heatmap(transpose(best_configuration));
 end
 
 function placement_matrix = generatePlacementMatrix(blocklist, baglist)
-    bag_size = 8;
-    placement_matrix = zeros(bag_size) - 1;
+    grid_size = [9 7]; % This is the maximum grid from the game
+    placement_matrix = zeros(grid_size(1),grid_size(2)) - 1;
 
     % Place Bags
     for bag_idx = 1:length(baglist)
@@ -54,7 +54,7 @@ function placement_matrix = generatePlacementMatrix(blocklist, baglist)
                 rotateCoords(baglist(bag_idx).blocks(block_idx,:), baglist(bag_idx).rotation);
 
             if (new_block(1) < 1 || new_block(2) < 1 || ...
-                new_block(1) > bag_size || new_block(2) > bag_size || ...
+                new_block(1) > grid_size(1) || new_block(2) > grid_size(2) || ...
                 placement_matrix(new_block(1), new_block(2)) ~= -1)
                 % Invalid placement
                 placement_matrix = [];
@@ -73,7 +73,7 @@ function placement_matrix = generatePlacementMatrix(blocklist, baglist)
                 rotateCoords(blocklist(item_idx).blocks(block_idx,:), blocklist(item_idx).rotation);
 
             if (new_block(1) < 1 || new_block(2) < 1 || ...
-                new_block(1) > bag_size || new_block(2) > bag_size || ...
+                new_block(1) > grid_size(1) || new_block(2) > grid_size(2) || ...
                 placement_matrix(new_block(1), new_block(2)) ~= 0)
                 % Invalid placement
                 placement_matrix = [];
