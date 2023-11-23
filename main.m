@@ -3,7 +3,7 @@ function main()
     item_types = items();
     bag_types = bags();
     blocklist = [item_types.simple_block item_types.double_block item_types.corner_block item_types.square_block];
-    baglist = [bag_types.basic_bag bag_types.basic_bag];
+    baglist = [bag_types.leather_bag bag_types.ranger_bag bag_types.potion_belt];
     
     % Random placement with abort criterium 
     rng(0,'twister');
@@ -12,7 +12,8 @@ function main()
     best_configuration = [];
     while 1
         for item_idx = 1:length(blocklist)
-            blocklist(item_idx).position = randi([0 6],1,2);
+            blocklist(item_idx).position(1) = randi([0 8],1);
+            blocklist(item_idx).position(2) = randi([0 6],1);
             blocklist(item_idx).rotation = randi([0 3],1,1);
         end
         for bag_idx = 1:length(baglist)
@@ -39,6 +40,7 @@ function main()
     
         if abortCounter > 1e3; break; end
     end
+    assert(~isempty(best_configuration), "No valid configuration found.");
     heatmap(transpose(best_configuration));
 end
 
