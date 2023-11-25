@@ -1,14 +1,16 @@
 #include <iostream>
-using std::cout;
-using std::endl;
 #include <fstream>
 #include <string>
+#include <vector>
 
-#include "items.cpp"
-#include "bags.cpp"
+#include "items.h"
+#include "bags.h"
 
 int main(int argc, char** argv) {
 
-  cout << "Test";
+  std::vector<Bag> baglist = {LookupBag("RangerBag"), LookupBag("RangerBag")};
+  std::vector<Item> itemlist = {LookupItem("WoodenSword"), LookupItem("Pan")};
+
+  std::cout << "Test";
   return EXIT_SUCCESS;
 }
