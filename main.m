@@ -5,13 +5,59 @@ function main()
     blocklist = [item_types.simple_block item_types.double_block item_types.corner_block item_types.square_block];
     baglist = [bag_types.leather_bag bag_types.ranger_bag bag_types.potion_belt];
     
-    best_configuration = randomPlacement(blocklist, baglist, 1e3);
+    best_configuration = simulatedAnnealing(blocklist, baglist);
 
     assert(~isempty(best_configuration), "No valid configuration found.");
+
     heatmap(transpose(best_configuration));
 end
 
-function best_configuration = randomPlacement(blocklist, baglist, maximum_tries)
+function best_configuration = simulatedAnnealing(blocklist, baglist)
+    % Find random valid configuration
+    temperature = 1;
+    best_configuration = [];
+    [initial_configuration,blocklist,baglist] = randomPlacement(blocklist, baglist, 1e3);
+
+    best_score = countValidConnections(blocklist, initial_configuration);
+
+    while temperature > 1e-6
+        % The maximum random movement changes with temperature
+        d_limits = int(temperature * [9 7]); 
+
+        % Either randomly move a block or rotate it
+        old_blocklist = blocklist;
+        block_idx = randi([1 length(blocklist)],1);
+        block = blocklist(block_idx);
+        if randi([0 1],1)
+            block.position(1) = max(9,min(1, block.position(1) + randi([-d_limits d_limits],1)));
+            block.position(2) = max(7,min(1, block.position(2) + randi([-d_limits d_limits],1)));
+        else
+            block.rotation = randi([0 3],1);
+        end
+
+        % Evaluate the resulting configuration
+        new_placement_matrix = generatePlacementMatrix(blocklist, baglist);
+
+        % Reset the configuration if it became invalid
+        if isempty(new_placement_matrix)
+            blocklist = old_blocklist;
+            continue
+        end
+
+        % Check if the configuration is better
+        new_score = countValidConnections(blocklist, placement_matrix);
+
+        if new_score > best_score
+            best_configuration = new_placement_matrix;
+            best_score = new_score;
+            disp("Current Best Score:");
+            disp(best_score);
+            temperature = temperature*0.95;
+        end
+    end
+end
+
+function [best_configuration,blocklist,baglist] = randomPlacement(blocklist, baglist, maximum_tries)
     rng(0,'twister');
     abortCounter = 0;
     abortScore = 0;
@@ -31,7 +77,7 @@ function best_configuration = randomPlacement(blocklist, baglist, maximum_tries)
         placement_matrix = generatePlacementMatrix(blocklist, baglist);
 
         % Check for invalid configuration
-        if isempty(placement_matrix);
+        if isempty(placement_matrix)
             abortCounter = abortCounter + 1;
             continue;
         end
@@ -48,7 +94,7 @@ function best_configuration = randomPlacement(blocklist, baglist, maximum_tries)
             tic;
         end
     
-        if abortCounter > maximum_tries; break; end
+        if abortCounter > maximum_tries && ~isempty(best_configuration); break; end
     end
 end
 
