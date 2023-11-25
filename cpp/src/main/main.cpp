@@ -33,6 +33,9 @@ std::tuple<vector<Bag>, vector<Item>> randomPlacement(vector<Bag> baglist, vecto
 
 GridMatrix generatePlacementMatrix(vector<Bag> baglist, vector<Item> itemlist){
   GridMatrix result = {};
+
+  result[3][3] = 5;
+
   return result;
 }
 
@@ -44,20 +47,26 @@ int main(int argc, char** argv) {
 
   std::tie(baglist, itemlist) = randomPlacement(baglist, itemlist);
 
-  for (Bag bag : baglist) {
-    std::cout << bag.position[0] << "\n";
-    std::cout << bag.position[1] << "\n";
-    std::cout << bag.rotation << "\n";
-  }
-  for (Item item : itemlist) {
-    std::cout << item.position[0] << "\n";
-    std::cout << item.position[1] << "\n";
-    std::cout << item.rotation << "\n";
-  }
+  // for (Bag bag : baglist) {
+  //   std::cout << bag.position[0] << "\n";
+  //   std::cout << bag.position[1] << "\n";
+  //   std::cout << bag.rotation << "\n";
+  // }
+  // for (Item item : itemlist) {
+  //   std::cout << item.position[0] << "\n";
+  //   std::cout << item.position[1] << "\n";
+  //   std::cout << item.rotation << "\n";
+  // }
 
   // Check validity of configuration
   GridMatrix placement_matrix = generatePlacementMatrix(baglist, itemlist);
 
-  std::cout << "Test";
+  for (int i = 0; i<7; i++) {
+    for (int k = 0; k<9; k++) {
+      std::cout << placement_matrix[k][i] << " ";
+    }
+    std::cout << "\n";
+  }
+
   return EXIT_SUCCESS;
 }
