@@ -4,10 +4,11 @@ using std::endl;
 #include <fstream>
 #include <string>
 
-#include "bag.cpp"
-#include "item.cpp"
+#include "items.cpp"
+#include "bags.cpp"
 
 int main(int argc, char** argv) {
+
   cout << "Test";
   return EXIT_SUCCESS;
 }
