@@ -133,6 +133,7 @@ gridmatrix randomSearchStrategy(vector<Bag> baglist, vector<Item>itemlist, int m
         best_configuration = placement_matrix_result.value_or(best_configuration);
         best_score = new_score;
         std::cout << "New best configuration score: " << best_score << "\n";
+        abort_counter = 0;
       }
     } else {
       abort_counter++;
@@ -145,7 +146,7 @@ int main(int argc, char** argv) {
   std::srand(std::time(nullptr)); // use current time as seed for random generator
 
   // Define item and bag inventory
-  vector<Bag> baglist = {LookupBag("RangerBag"), LookupBag("RangerBag"), LookupBag("PotionBelt")};
+  vector<Bag> baglist = {LookupBag("RangerBag"), LookupBag("RangerBag")};
   vector<Item> itemlist = {LookupItem("WoodenSword"), LookupItem("Pan"), LookupItem("GlovesOfHaste")};
 
   // Choose a search strategy
