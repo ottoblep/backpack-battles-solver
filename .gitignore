@@ -1,4 +1,1 @@
-*
-!*.md
-!*.m
-!.gitignore
+.vscode
