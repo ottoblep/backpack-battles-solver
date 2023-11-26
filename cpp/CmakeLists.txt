@@ -23,8 +23,10 @@ file(GLOB_RECURSE data resources/*)
 add_executable(bb_solver ${sources} ${data})
 
 # Just for example add some compiler flags.
-target_compile_options(bb_solver PUBLIC -std=c++1y -Wall -Wfloat-conversion)
-
+target_compile_options(bb_solver PUBLIC)
+set_target_properties(bb_solver PROPERTIES
+            CXX_STANDARD 17
+            )
 # This allows to include files relative to the root of the src directory with a <> pair
 target_include_directories(bb_solver PUBLIC src/main)
 
