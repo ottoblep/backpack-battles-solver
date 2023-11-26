@@ -9,5 +9,6 @@ Item LookupItem(std::string name) {
     if (name == "GlovesOfHaste")
         return Item({{0, 0},{1, 0}}, {{}});
 
+    throw::std::invalid_argument("Item type not found.");
     return Item({},{});
 };

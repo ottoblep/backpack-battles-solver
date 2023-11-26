@@ -13,5 +13,6 @@ Bag LookupBag(std::string name) {
     if (name == "RangerBag")
         return Bag({{0, 0},{0, 1}, {1, 0}, {1, 1}, {2, 0}, {2, 1}});
 
+    throw::std::invalid_argument("Bag type not found.");
     return Bag({});
 };
