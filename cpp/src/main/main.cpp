@@ -146,7 +146,7 @@ int main(int argc, char** argv) {
   std::srand(std::time(nullptr)); // use current time as seed for random generator
 
   // Define item and bag inventory
-  vector<Bag> baglist = {LookupBag("RangerBag"), LookupBag("RangerBag")};
+  vector<Bag> baglist = {LookupBag("RangerBag"), LookupBag("RangerBag"), LookupBag("StaminaSack"),};
   vector<Item> itemlist = {LookupItem("WoodenSword"), LookupItem("Pan"), LookupItem("GlovesOfHaste")};
 
   // Choose a search strategy

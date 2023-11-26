@@ -12,20 +12,16 @@ void printCoords(coord coords){
 coord rotateCoords(coord coords, int rotation){
   switch (rotation){
     case 1:
-      coords[0] = -coords[1];
-      coords[1] = coords[0];
+      coords[0] = coords[1];
+      coords[1] = -coords[0];
       break;
     case 2:
       coords[0] = -coords[0];
       coords[1] = -coords[1];
       break;
     case 3:
-      coords[0] = coords[1];
-      coords[1] = -coords[0];
-      break;
-    case 4:
-      coords[0] = coords[1];
-      coords[1] = -coords[0];
+      coords[0] = -coords[1];
+      coords[1] = coords[0];
       break;
   }
   return coords;
