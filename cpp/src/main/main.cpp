@@ -156,6 +156,7 @@ gridmatrix randomSearchStrategy(vector<Bag> baglist, vector<Item>itemlist, int m
 }
 
 int main(int argc, char** argv) {
+  // TODO: Add argparser to choose strategy and parameters instead of hard-coding
   std::srand(std::time(nullptr)); // use current time as seed for random generator
 
   // Define item and bag inventory
