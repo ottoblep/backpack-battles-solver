@@ -23,10 +23,19 @@ using std::optional;
 // This represents a matrix the size of the maximum grid possible
 typedef array<array<int, GRID_SIZE_Y>, GRID_SIZE_X> gridmatrix;
 
+// This prints the placement matrix as follows:
+//  - Empty space (0 in matrix) is not printed
+//  - Bag space (-1 in matrix) is printed as 0 
+//  - Items (>0 in matrix) are printed as >0 
 void printGridMatrix(gridmatrix matrix){
   for (int i = 0; i<GRID_SIZE_Y; i++) {
     for (int k = 0; k<GRID_SIZE_X; k++) {
-      std::cout << matrix[k][i] << " ";
+      if (matrix[k][i]>0)
+        std::cout << matrix[k][i] << " ";
+      else if (matrix[k][i]==0)
+        std::cout << "  ";
+      else
+        std::cout << "0 ";
     }
     std::cout << "\n";
   }
@@ -150,7 +159,7 @@ int main(int argc, char** argv) {
   vector<Item> itemlist = {LookupItem("WoodenSword"), LookupItem("Pan"), LookupItem("GlovesOfHaste")};
 
   // Choose a search strategy
-  gridmatrix best_configuration = randomSearchStrategy(baglist, itemlist, 1e6);
+  gridmatrix best_configuration = randomSearchStrategy(baglist, itemlist, 10e6);
 
   // If no valid configuration is found this will be all zeros
   printGridMatrix(best_configuration);
