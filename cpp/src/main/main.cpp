@@ -19,6 +19,9 @@ using std::optional;
 
 #define GRID_SIZE_X 9
 #define GRID_SIZE_Y 7
+// Search space size for 3 bags and 5 items 
+// (9 * 7 * 4)^8 = 16e18  
+// Time to solve with 500ns per configuration is 250 thousand years
 
 // This represents a matrix the size of the maximum grid possible
 typedef array<array<int, GRID_SIZE_Y>, GRID_SIZE_X> gridmatrix;
