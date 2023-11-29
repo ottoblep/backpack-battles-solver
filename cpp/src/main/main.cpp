@@ -44,6 +44,7 @@ void printGridMatrix(gridmatrix matrix){
   }
 }
 
+// Checks the outside boundaries of the grid
 bool isValidGridPosition(coord coords) {
   if (coords[0] < 0 || coords[1] < 0 || coords[0] > GRID_SIZE_X-1|| coords[1] > GRID_SIZE_Y-1) { return false; }
   else { return true; }
