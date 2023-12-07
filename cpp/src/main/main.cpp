@@ -8,6 +8,11 @@
 #include <cstdlib>
 #include <ctime>
 #include <optional>
+#include <thread>
+#include <mutex>
+#include <memory>
+#include <chrono>
+#include <ctime>
 
 #include "items.h"
 #include "bags.h"
@@ -21,10 +26,15 @@ using std::optional;
 #define GRID_SIZE_Y 7
 // Search space size for 3 bags and 5 items 
 // (9 * 7 * 4)^8 = 16e18  
-// Time to solve with 500ns per configuration is 250 thousand years
+// Singlecore performance 500ns/configuration = 250 thousand years
+// Multicore performance x8 ~60ns/configuration = 30 thousand years
 
 // This represents a matrix the size of the maximum grid possible
 typedef array<array<int, GRID_SIZE_Y>, GRID_SIZE_X> gridmatrix;
+
+std::mutex global_configuration_mutex;
+int global_best_score;
+gridmatrix global_best_configuration;
 
 // This prints the placement matrix as follows:
 //  - Empty space (0 in matrix) is not printed
@@ -128,31 +138,45 @@ int countValidConnections(gridmatrix placement_matrix, vector<Item> itemlist) {
   return score;
 }
 
-gridmatrix randomSearchStrategy(vector<Bag> baglist, vector<Item>itemlist, int maxRetries) {
-  gridmatrix best_configuration = {};
-  int best_score = 0;
-  int abort_counter = 0;
-  int new_score = 0;
+// Independently generates and evaluates configurations for a fixed time
+void randomSearchThread(vector<Bag> baglist, vector<Item>itemlist, int runtime) {
+  std::chrono::time_point<std::chrono::high_resolution_clock> t_start = std::chrono::high_resolution_clock::now();
+  std::chrono::time_point<std::chrono::high_resolution_clock> t_end;
+  int new_score;
+  optional<gridmatrix> placement_matrix_result;
 
-  while (abort_counter < maxRetries) {
+  while ( std::chrono::duration_cast<std::chrono::seconds>(t_end - t_start).count() < runtime ) {
     std::tie(baglist, itemlist) = generateRandomConfiguration(baglist, itemlist);
     // Check validity of configuration
-    optional<gridmatrix> placement_matrix_result = generatePlacementMatrix(baglist, itemlist);
+    placement_matrix_result = generatePlacementMatrix(baglist, itemlist);
 
     // Evaluate score of configuration
     if (placement_matrix_result.has_value()) {
       new_score = countValidConnections(placement_matrix_result.value(),itemlist);
-      if (new_score > best_score) {
-        best_configuration = placement_matrix_result.value_or(best_configuration);
-        best_score = new_score;
-        std::cout << "New best configuration score: " << best_score << "\n";
-        abort_counter = 0;
+      if (new_score > global_best_score) {
+        global_configuration_mutex.lock();
+        global_best_configuration = placement_matrix_result.value();
+        global_best_score = new_score;
+        global_configuration_mutex.unlock();
+        std::cout << "New best configuration score: " << global_best_score << "\n";
       }
-    } else {
-      abort_counter++;
     }
+    t_end = std::chrono::high_resolution_clock::now();
   }
-  return best_configuration;
+}
+
+// Launches multiple random search threads which write their result to global_best_configuration 
+void randomSearchStrategy(vector<Bag> baglist, vector<Item>itemlist, int runtime, int threads) {
+  std::vector<std::thread> threadlist;
+  std::cout << "Spawning " << threads << " search threads running for " << runtime << " seconds.\n";
+
+  for (int t = 0; t < threads; t++) {
+    threadlist.push_back(std::thread(randomSearchThread, baglist, itemlist, runtime));
+  }
+  for (int t = 0; t < threads; t++) {
+    threadlist[t].join();
+  }
+  std::cout << "All threads have exited.\n";
 }
 
 int main(int argc, char** argv) {
@@ -164,10 +188,10 @@ int main(int argc, char** argv) {
   vector<Item> itemlist = {LookupItem("WoodenSword"), LookupItem("Pan"), LookupItem("GlovesOfHaste")};
 
   // Choose a search strategy
-  gridmatrix best_configuration = randomSearchStrategy(baglist, itemlist, 10e6);
+  randomSearchStrategy(baglist, itemlist, 60, 6);
 
   // If no valid configuration is found this will be all zeros
-  printGridMatrix(best_configuration);
+  printGridMatrix(global_best_configuration);
 
   return EXIT_SUCCESS;
 }
