@@ -1,9 +1,18 @@
 #include <array>
 #include <iostream>
 
+#define GRID_SIZE_X 9
+#define GRID_SIZE_Y 7
+// Search space size for 3 bags and 5 items 
+// (9 * 7 * 4)^8 = 16e18  
+// Singlecore performance 500ns/configuration = 250 thousand years
+// Multicore performance x8 ~60ns/configuration = 30 thousand years
 using std::array;
 
 typedef array<int, 2> coord;
+
+// This represents a matrix the size of the maximum grid possible
+typedef array<array<int, GRID_SIZE_Y>, GRID_SIZE_X> gridmatrix;
 
 void printCoords(coord coords){
     std::cout << coords[0] << " " << coords[1] << "\n";
