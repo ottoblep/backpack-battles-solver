@@ -14,7 +14,6 @@
 #include "coordinates.h"
 
 using std::vector;
-using std::array;
 using std::optional;
 
 // This assigns random coordinates and rotation to each item.

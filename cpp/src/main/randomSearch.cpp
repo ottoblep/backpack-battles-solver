@@ -8,7 +8,6 @@
 #include "objective.cpp"
 
 using std::vector;
-using std::array;
 using std::optional;
 
 std::mutex global_configuration_mutex;
