@@ -17,12 +17,6 @@ using std::vector;
 using std::array;
 using std::optional;
 
-// Checks the outside boundaries of the grid
-bool isValidGridPosition(coord coords) {
-  if (coords[0] < 0 || coords[1] < 0 || coords[0] > GRID_SIZE_X-1|| coords[1] > GRID_SIZE_Y-1) { return false; }
-  else { return true; }
-}
-
 // This assigns random coordinates and rotation to each item.
 std::tuple<vector<Bag>, vector<Item>> generateRandomConfiguration(vector<Bag> baglist, vector<Item> itemlist){
   for (int i = 0;i<baglist.size();i++){

@@ -14,6 +14,12 @@ typedef array<int, 2> coord;
 // This represents a matrix the size of the maximum grid possible
 typedef array<array<int, GRID_SIZE_Y>, GRID_SIZE_X> gridmatrix;
 
+// Checks the outside boundaries of the grid
+bool isValidGridPosition(coord coords) {
+  if (coords[0] < 0 || coords[1] < 0 || coords[0] > GRID_SIZE_X-1|| coords[1] > GRID_SIZE_Y-1) { return false; }
+  else { return true; }
+}
+
 void printCoords(coord coords){
     std::cout << coords[0] << " " << coords[1] << "\n";
 }
