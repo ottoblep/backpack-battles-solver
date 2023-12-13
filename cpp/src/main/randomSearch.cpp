@@ -5,7 +5,7 @@
 #include <ctime>
 #include <optional>
 
-#include "objective.h"
+#include "objective.cpp"
 
 using std::vector;
 using std::array;

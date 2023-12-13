@@ -20,7 +20,8 @@ file(GLOB_RECURSE data resources/*)
 
 # The data is just added to the executable, because in some IDEs (QtCreator) 
 # files are invisible when they are not explicitly part of the project.
-add_executable(bb_solver ${sources} ${data})
+# add_executable(bb_solver ${sources} ${data})
+add_executable(bb_solver src/main/main.cpp)
 
 # Just for example add some compiler flags.
 target_compile_options(bb_solver PUBLIC)

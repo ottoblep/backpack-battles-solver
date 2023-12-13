@@ -9,7 +9,7 @@
 #include <ctime>
 #include <optional>
 
-#include "randomSearch.h"
+#include "randomSearch.cpp"
 
 using std::vector;
 
