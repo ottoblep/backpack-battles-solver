@@ -5,7 +5,10 @@
 #include <ctime>
 #include <optional>
 
+#ifndef objective
 #include "objective.cpp"
+#define objective
+#endif
 
 using std::vector;
 using std::optional;
