@@ -1,5 +1,4 @@
 #include <thread>
-#include <mutex>
 #include <memory>
 #include <chrono>
 #include <ctime>
@@ -13,9 +12,7 @@
 using std::vector;
 using std::optional;
 
-std::mutex global_configuration_mutex;
-int global_best_score;
-gridmatrix global_best_configuration;
+#include "threadHandling.h"
 
 // Independently generates and evaluates configurations for a fixed time
 void randomSearchThread(vector<Bag> baglist, vector<Item>itemlist, int runtime) {
