@@ -34,6 +34,7 @@ bool cmdOptionExists(char** begin, char** end, const std::string& option)
 void printHelp() {
   std::cout << 
     "Usage: bb_solver [OPTIONS] -b BAGS -i ITEMS \n"
+    "Example: bb_solver -b 12 -i 01 -a greedy -t 20 -n 11\n\n"
     "Example: bb_solver -a greedy -t 20 113 0233\n\n"
     "Options:\n"
     "  -b,  type and number of bags to place\n"
