@@ -4,6 +4,7 @@
 #include <ctime>
 #include <optional>
 #include <vector>
+#include <cassert>
 
 #ifndef objective
 #include "objective.cpp"
@@ -24,13 +25,14 @@ int findLargest(T list) {
   int largest_idx = 0;
   int largest_size = 0; 
   int size;
-  for (int i = 0;i<list.size();i++){
+  for (int i = 0; i<list.size(); i++){
     size = list[i].blocks.size();
-    if ( size > largest_size){
+    if (size > largest_size){
       largest_idx = i;
       largest_size = size;
     }
   }
+  assert(largest_idx >= 0); assert(largest_size > 0);
   return largest_idx;
 }
 
@@ -47,7 +49,7 @@ std::tuple<vector<Bag>, vector<Item>> generateValidConfigurationGreedy(vector<Ba
   // Place bags from largest to smallest
   for (int i = 0; i < original_baglist.size(); i++){
     // Find largest remaining bag
-    int largest_bag_idx = findLargest(baglist);
+    int largest_bag_idx = findLargest<vector<Bag>>(baglist);
 
     // Move it to the working list
     test_baglist.push_back(baglist[largest_bag_idx]);
@@ -71,7 +73,7 @@ std::tuple<vector<Bag>, vector<Item>> generateValidConfigurationGreedy(vector<Ba
   // Place items from largest to smallest
   for (int i = 0; i < original_itemlist.size(); i++){
     // Find largest remaining bag
-    int largest_item_idx = findLargest(itemlist);
+    int largest_item_idx = findLargest<vector<Item>>(itemlist);
 
     // Move it to the working list
     test_itemlist.push_back(itemlist[largest_item_idx]);
