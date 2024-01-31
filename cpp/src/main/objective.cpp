@@ -34,7 +34,7 @@ std::tuple<vector<Bag>, vector<Item>> generateRandomConfiguration(vector<Bag> ba
 // Tries to place all bags in a new matrix
 // Returns if the configuration is invalid
 optional<gridmatrix> generateBagMatrix(vector<Bag> baglist){
-  gridmatrix result = {};
+  gridmatrix bag_matrix = {};
   coord new_block;
 
   // Place the bags
@@ -45,14 +45,15 @@ optional<gridmatrix> generateBagMatrix(vector<Bag> baglist){
       if (!isValidGridPosition(new_block)) return {};
 
       // Bags can not be placed on another bag 
-      if (result[new_block[0]][new_block[1]] == 0){
+      if (bag_matrix[new_block[0]][new_block[1]] == 0){
         // Mark the location of an item with its number in the baglist
-        result[new_block[0]][new_block[1]] = -1;
+        bag_matrix[new_block[0]][new_block[1]] = -1;
       } else {
         return {};
       }
     }
   }
+  return bag_matrix;
 }
 
 // Tries to place items into a matrix containing bags
@@ -88,7 +89,7 @@ optional<gridmatrix> generatePlacementMatrix(vector<Bag> baglist, vector<Item> i
   optional<gridmatrix> item_matrix = generateItemMatrix(bag_matrix.value(), itemlist);
   if (!item_matrix.has_value()) return {};
 
-  return item_matrix;
+  return item_matrix.value();
 }
 
 // Counts valid connections between items
