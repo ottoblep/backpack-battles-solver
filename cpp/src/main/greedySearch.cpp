@@ -60,8 +60,7 @@ std::tuple<vector<Bag>, vector<Item>> generateValidConfigurationGreedy(vector<Ba
       test_baglist.back().position = {std::rand()%GRID_SIZE_X, std::rand()%GRID_SIZE_Y};
       test_baglist.back().rotation = std::rand()%4;
       // Abort if there is no way to place the part
-      if (placement_tries > 1e7) {
-        // std::cout << "Failed to place bag. Aborting.\n";
+      if (placement_tries > 1e5) {
         return {};
       }
     } while (!generateBagMatrix(baglist).has_value());
@@ -85,8 +84,7 @@ std::tuple<vector<Bag>, vector<Item>> generateValidConfigurationGreedy(vector<Ba
       test_itemlist.back().position = {std::rand()%GRID_SIZE_X, std::rand()%GRID_SIZE_Y};
       test_itemlist.back().rotation = std::rand()%4;
       // Abort if there is no way to place the part
-      if (placement_tries > 1e7) {
-        // std::cout << "Failed to place item. Aborting.\n";
+      if (placement_tries > 1e5) {
         return {};
       }
     } while (!generateItemMatrix(bag_matrix, test_itemlist).has_value());
@@ -94,8 +92,6 @@ std::tuple<vector<Bag>, vector<Item>> generateValidConfigurationGreedy(vector<Ba
   gridmatrix item_matrix = generateItemMatrix(bag_matrix, test_itemlist).value();
   itemlist = test_itemlist;
 
-  // Place each item sequentally
-  // Place items from largest to smallest
   // TODO: select item with the most connection points
   // TODO: Place first item in center of bag
   // TODO: Place additional items around the first
@@ -113,6 +109,8 @@ void greedySearchThread(vector<Bag> baglist, vector<Item>itemlist, int runtime) 
   while ( std::chrono::duration_cast<std::chrono::seconds>(t_end - t_start).count() < runtime ) {
 
     std::tie(baglist, itemlist) = generateValidConfigurationGreedy(baglist, itemlist);
+
+    placement_matrix_result = generatePlacementMatrix(baglist, itemlist);
 
     // Evaluate score of configuration
     if (placement_matrix_result.has_value()) {
