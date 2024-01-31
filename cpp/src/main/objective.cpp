@@ -31,9 +31,9 @@ std::tuple<vector<Bag>, vector<Item>> generateRandomConfiguration(vector<Bag> ba
   return std::make_pair(baglist, itemlist);
 }
 
-// This iterates through the item list and attempts to place all of them in the placement matrix
-// This checks if a configuration is in the valid search space
-optional<gridmatrix> generatePlacementMatrix(vector<Bag> baglist, vector<Item> itemlist){
+// Tries to place all bags in a new matrix
+// Returns if the configuration is invalid
+optional<gridmatrix> generateBagMatrix(vector<Bag> baglist){
   gridmatrix result = {};
   coord new_block;
 
@@ -53,6 +53,13 @@ optional<gridmatrix> generatePlacementMatrix(vector<Bag> baglist, vector<Item> i
       }
     }
   }
+}
+
+// Tries to place items into a matrix containing bags
+// Returns if the configuration is invalid
+optional<gridmatrix> generateItemMatrix(gridmatrix bag_matrix, vector<Item> itemlist){
+  coord new_block;
+
   // Place the items in the bags
   for (int i = 0;i<itemlist.size();i++){
     for (int block_num = 0; block_num<itemlist[i].blocks.size(); block_num++){
@@ -61,15 +68,27 @@ optional<gridmatrix> generatePlacementMatrix(vector<Bag> baglist, vector<Item> i
       if (!isValidGridPosition(new_block)) return {};
 
       // Items can only be placed in a bag 
-      if (result[new_block[0]][new_block[1]] == -1){
+      if (bag_matrix[new_block[0]][new_block[1]] == -1){
         // Mark the location of an item with its number in the baglist
-        result[new_block[0]][new_block[1]] = i+1;
+        bag_matrix[new_block[0]][new_block[1]] = i+1;
       } else {
         return {};
       }
     }
   }
-  return result;
+  return bag_matrix;
+}
+
+optional<gridmatrix> generatePlacementMatrix(vector<Bag> baglist, vector<Item> itemlist){
+  gridmatrix result;
+
+  optional<gridmatrix> bag_matrix = generateBagMatrix(baglist);
+  if (!bag_matrix.has_value()) return {};
+
+  optional<gridmatrix> item_matrix = generateItemMatrix(bag_matrix.value(), itemlist);
+  if (!item_matrix.has_value()) return {};
+
+  return item_matrix;
 }
 
 // Counts valid connections between items
