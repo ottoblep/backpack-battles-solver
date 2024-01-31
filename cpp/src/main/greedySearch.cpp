@@ -45,11 +45,12 @@ std::tuple<vector<Bag>, vector<Item>> generateValidConfigurationGreedy(vector<Ba
 
   bool done = false;
   int placement_tries;
+  int largest_bag_idx;
 
   // Place bags from largest to smallest
   for (int i = 0; i < original_baglist.size(); i++){
     // Find largest remaining bag
-    int largest_bag_idx = findLargest<vector<Bag>>(baglist);
+    largest_bag_idx = findLargest<vector<Bag>>(baglist);
 
     // Move it to the working list
     test_baglist.push_back(baglist[largest_bag_idx]);
@@ -61,13 +62,16 @@ std::tuple<vector<Bag>, vector<Item>> generateValidConfigurationGreedy(vector<Ba
       placement_tries++;
       test_baglist.back().position = {std::rand()%GRID_SIZE_X, std::rand()%GRID_SIZE_Y};
       test_baglist.back().rotation = std::rand()%4;
+
       // Abort if there is no way to place the part
       if (placement_tries > 1e5) {
         return {};
       }
-    } while (!generateBagMatrix(baglist).has_value());
+    } while (!generateBagMatrix(test_baglist).has_value());
   }
-  gridmatrix bag_matrix = generateBagMatrix(test_baglist).value();
+  optional<gridmatrix> bag_matrix_result = generateBagMatrix(test_baglist).value();
+  assert(bag_matrix_result.has_value());
+  gridmatrix bag_matrix = bag_matrix_result.value();
   baglist = test_baglist;
 
   // Place items from largest to smallest
