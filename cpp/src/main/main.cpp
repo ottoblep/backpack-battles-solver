@@ -10,6 +10,7 @@
 #include <optional>
 
 #include "randomSearch.cpp"
+#include "greedySearch.cpp"
 
 using std::vector;
 
@@ -40,7 +41,8 @@ int main(int argc, char** argv) {
   vector<Item> itemlist = {LookupItem("WoodenSword"), LookupItem("Pan"), LookupItem("GlovesOfHaste")};
 
   // Choose a search strategy
-  gridmatrix search_result = randomSearchStrategy(baglist, itemlist, 60, 11);
+  // gridmatrix search_result = randomSearchStrategy(baglist, itemlist, 60, 11);
+  gridmatrix search_result = greedySearchStrategy(baglist, itemlist, 60, 11);
 
   // If no valid configuration is found this will be all zeros
   printGridMatrix(search_result);

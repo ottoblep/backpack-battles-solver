@@ -3,65 +3,102 @@
 #include <chrono>
 #include <ctime>
 #include <optional>
+#include <vector>
 
 #ifndef objective
 #include "objective.cpp"
 #define objective
 #endif
+#ifndef thread_handling
+#include "threadHandling.h"
+#define thread_handling
+#endif
 
 using std::vector;
 using std::optional;
 
-#include "threadHandling.h"
-
-int findLargestBag(vector<Bag> baglist) {
-    // Select bag with the most space 
-    int largest_bag_idx = 0;
-    int largest_size = 0; 
-    int bagsize;
-    for (int i = 0;i<baglist.size();i++){
-      bagsize = baglist[i].blocks.size();
-      if ( bagsize > largest_size){
-        largest_bag_idx = i;
-        largest_size = bagsize;
-      }
+// Finds either largest bag or item in list
+template <typename T>
+int findLargest(T list) {
+  // Select bag with the most space 
+  int largest_idx = 0;
+  int largest_size = 0; 
+  int size;
+  for (int i = 0;i<list.size();i++){
+    size = list[i].blocks.size();
+    if ( size > largest_size){
+      largest_idx = i;
+      largest_size = size;
     }
-    return largest_bag_idx;
+  }
+  return largest_idx;
 }
 
 // Greedily places bags and objects iteratively
 std::tuple<vector<Bag>, vector<Item>> generateValidConfigurationGreedy(vector<Bag> baglist, vector<Item> itemlist){
-  vector<Bag> partial_baglist;
-
   vector<Bag> original_baglist = baglist;
   vector<Item> original_itemlist = itemlist;
-  vector<Bag> iteration_baglist = baglist;
-  vector<Item> iteration_itemlist = itemlist;
+  vector<Bag> test_baglist;
+  vector<Item> test_itemlist;
 
   bool done = false;
+  int placement_tries;
 
-  // Try to place each bag sequentally from largest to smallest
-  do {
-    for (int i = 0;i<baglist.size();i++){
-      // Find largest remaining bag
-      int largest_bag_idx = findLargestBag(iteration_baglist);
-      // Try placing that bag and remove from remaining
-      do {
-      baglist[i].position = {std::rand()%GRID_SIZE_X, std::rand()%GRID_SIZE_Y};
-      baglist[i].rotation = std::rand()%4;
-      } while (!generatePlacementMatrix(baglist, itemlist))
-      iteration_baglist.erase(iteration_baglist.begin() + largest_bag_idx);
-    }
-  } while (!done);
+  // Place bags from largest to smallest
+  for (int i = 0; i < original_baglist.size(); i++){
+    // Find largest remaining bag
+    int largest_bag_idx = findLargest(baglist);
 
-    // TODO: Place each item sequentally
-    // TODO: select item with the most connection points
-    // TODO: Place first item in center of bag
-    // TODO: Place additional items around the first
-  for (int i = 0;i<itemlist.size();i++){
-    itemlist[i].position = {std::rand()%GRID_SIZE_X, std::rand()%GRID_SIZE_Y};
-    itemlist[i].rotation = std::rand()%4;
+    // Move it to the working list
+    test_baglist.push_back(baglist[largest_bag_idx]);
+    baglist.erase(baglist.begin() + largest_bag_idx);
+
+    // Try until placing that bag
+    placement_tries = 0;
+    do {
+      placement_tries++;
+      test_baglist.back().position = {std::rand()%GRID_SIZE_X, std::rand()%GRID_SIZE_Y};
+      test_baglist.back().rotation = std::rand()%4;
+      // Abort if there is no way to place the part
+      if (placement_tries > 1e7) {
+        // std::cout << "Failed to place bag. Aborting.\n";
+        return {};
+      }
+    } while (!generateBagMatrix(baglist).has_value());
   }
+  gridmatrix bag_matrix = generateBagMatrix(test_baglist).value();
+  baglist = test_baglist;
+
+  // Place items from largest to smallest
+  for (int i = 0; i < original_itemlist.size(); i++){
+    // Find largest remaining bag
+    int largest_item_idx = findLargest(itemlist);
+
+    // Move it to the working list
+    test_itemlist.push_back(itemlist[largest_item_idx]);
+    itemlist.erase(itemlist.begin() + largest_item_idx);
+
+    // Try until placing that bag
+    placement_tries = 0;
+    do {
+      placement_tries++;
+      test_itemlist.back().position = {std::rand()%GRID_SIZE_X, std::rand()%GRID_SIZE_Y};
+      test_itemlist.back().rotation = std::rand()%4;
+      // Abort if there is no way to place the part
+      if (placement_tries > 1e7) {
+        // std::cout << "Failed to place item. Aborting.\n";
+        return {};
+      }
+    } while (!generateItemMatrix(bag_matrix, test_itemlist).has_value());
+  }
+  gridmatrix item_matrix = generateItemMatrix(bag_matrix, test_itemlist).value();
+  itemlist = test_itemlist;
+
+  // Place each item sequentally
+  // Place items from largest to smallest
+  // TODO: select item with the most connection points
+  // TODO: Place first item in center of bag
+  // TODO: Place additional items around the first
 
   return std::make_pair(baglist, itemlist);
 }

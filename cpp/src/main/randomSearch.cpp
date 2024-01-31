@@ -8,11 +8,13 @@
 #include "objective.cpp"
 #define objective
 #endif
+#ifndef thread_handling
+#include "threadHandling.h"
+#define thread_handling
+#endif
 
 using std::vector;
 using std::optional;
-
-#include "threadHandling.h"
 
 // Independently generates and evaluates configurations for a fixed time
 void randomSearchThread(vector<Bag> baglist, vector<Item>itemlist, int runtime) {
@@ -43,6 +45,7 @@ void randomSearchThread(vector<Bag> baglist, vector<Item>itemlist, int runtime) 
 
 // Launches multiple random search threads which write their result to global_best_configuration 
 gridmatrix randomSearchStrategy(vector<Bag> baglist, vector<Item>itemlist, int runtime, int threads) {
+  std::cout << "Running random search strategy.\n";
   std::vector<std::thread> threadlist;
   std::cout << "Spawning " << threads << " search threads running for " << runtime << " seconds.\n";
 
