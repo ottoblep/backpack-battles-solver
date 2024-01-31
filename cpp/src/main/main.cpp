@@ -14,24 +14,6 @@
 
 using std::vector;
 
-// This prints the placement matrix as follows:
-//  - Empty space (0 in matrix) is not printed
-//  - Bag space (-1 in matrix) is printed as 0 
-//  - Items (>0 in matrix) are printed as >0 
-void printGridMatrix(gridmatrix matrix){
-  for (int i = 0; i<GRID_SIZE_Y; i++) {
-    for (int k = 0; k<GRID_SIZE_X; k++) {
-      if (matrix[k][i]>0)
-        std::cout << matrix[k][i] << " ";
-      else if (matrix[k][i]==0)
-        std::cout << "  ";
-      else
-        std::cout << "0 ";
-    }
-    std::cout << "\n";
-  }
-}
-
 int main(int argc, char** argv) {
   // TODO: Add argparser to choose strategy and parameters instead of hard-coding
   std::srand(std::time(nullptr)); // use current time as seed for random generator

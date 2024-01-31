@@ -24,6 +24,24 @@ void printCoords(coord coords){
     std::cout << coords[0] << " " << coords[1] << "\n";
 }
 
+// This prints the placement matrix as follows:
+//  - Empty space (0 in matrix) is not printed
+//  - Bag space (-1 in matrix) is printed as 0 
+//  - Items (>0 in matrix) are printed as >0 
+void printGridMatrix(gridmatrix matrix){
+  for (int i = 0; i<GRID_SIZE_Y; i++) {
+    for (int k = 0; k<GRID_SIZE_X; k++) {
+      if (matrix[k][i]>0)
+        std::cout << matrix[k][i] << " ";
+      else if (matrix[k][i]==0)
+        std::cout << "  ";
+      else
+        std::cout << "0 ";
+    }
+    std::cout << "\n";
+  }
+}
+
 coord rotateCoords(coord coords, int rotation){
   coord old_coords = coords;
   switch (rotation){
